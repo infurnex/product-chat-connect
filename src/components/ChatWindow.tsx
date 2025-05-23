@@ -20,6 +20,8 @@ const ChatWindow = ({ onClose, chatId, onChatCreated }: ChatWindowProps) => {
   const createMessageMutation = useCreateMessage();
   const createChatMutation = useCreateChat();
   const [image, setImage] = useState<any>();
+
+  const fileInputRef = useRef(null);
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -50,9 +52,12 @@ const ChatWindow = ({ onClose, chatId, onChatCreated }: ChatWindowProps) => {
 
       // fetching results from ai agent
       const formData = new FormData();
-      formData.append("text", message);
-      formData.append("image", image);
       formData.append("chatId", currentChatId);
+      formData.append("text", message);
+      if (image) {
+        formData.append("image", image);
+      }
+      formData.append("imageAttached", image ? "true" : "false");
       
       setMessage("");
       setImage("");
@@ -60,13 +65,18 @@ const ChatWindow = ({ onClose, chatId, onChatCreated }: ChatWindowProps) => {
       const AIresponse = await fetch("http://localhost:5678/webhook-test/agent", {
         method: "POST",
         body: formData,
-      });
+      });;
 
-      console.log("ai's", AIresponse);
+      if(!AIresponse.ok) {
+        throw new Error("Failed to fetch AI response");
+      }
+
+      const aimessage = await AIresponse.text() || "something went wrong";
+
       await createMessageMutation.mutateAsync({
         chatId: currentChatId,
         role: 'assistant',
-        content: "I'm looking into that for you. Is there anything specific you're interested in?",
+        content: aimessage,
       });
 
     } catch (error) {
@@ -129,14 +139,19 @@ const ChatWindow = ({ onClose, chatId, onChatCreated }: ChatWindowProps) => {
       
       <div className="p-3 border-t border-gray-200 bg-gray-50 flex items-center gap-2">
         <input
+          id="file-upload"
+          ref={fileInputRef}
+          className="hidden"
           type="file"
           accept="image/*"
-          className="mt-1"
           onChange={(e) => setImage(e.target.files[0])}
         />
-        <Button variant="ghost" size="icon" className="h-8 w-8 flex-shrink-0 text-gray-500">
+        <Button variant="ghost" size="icon" className="h-8 w-8 flex-shrink-0 text-gray-500"
+          onClick={() => fileInputRef.current?.click()}
+        >
           <Paperclip className="h-4 w-4" />
         </Button>
+
         <Input
           placeholder="Type your message..."
           value={message}
