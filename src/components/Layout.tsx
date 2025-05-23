@@ -79,7 +79,7 @@ const Layout = ({
                 {sidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
               </Button>
             )}
-            <h1 className="text-xl font-bold">Shopping Assistant</h1>
+            <h1 className="text-xl font-bold">AI Shopping Assistant</h1>
           </div>
           
           <div className="flex items-center gap-2">
