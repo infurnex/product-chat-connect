@@ -8,9 +8,13 @@ export const useChats = () => {
   return useQuery({
     queryKey: ['chats'],
     queryFn: async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('No authenticated user');
+
       const { data, error } = await supabase
         .from('chats')
         .select('*')
+        .eq('user_id', user.id)
         .order('created_at', { ascending: false });
       
       if (error) throw error;
@@ -24,9 +28,12 @@ export const useCreateChat = () => {
   
   return useMutation({
     mutationFn: async (title: string) => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('No authenticated user');
+
       const { data, error } = await supabase
         .from('chats')
-        .insert([{ title }])
+        .insert([{ title, user_id: user.id }])
         .select()
         .single();
       
