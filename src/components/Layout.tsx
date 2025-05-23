@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
-import { MessageSquare, Menu, X, ChevronDown } from "lucide-react";
+import { MessageSquare, Menu, X, User, LogOut } from "lucide-react";
 import { 
   Select, 
   SelectContent, 
@@ -9,8 +9,15 @@ import {
   SelectTrigger, 
   SelectValue 
 } from "@/components/ui/select";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { categories } from "@/data/products";
+import { User as SupabaseUser } from '@supabase/supabase-js';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -18,6 +25,9 @@ interface LayoutProps {
   onToggleChat: () => void;
   selectedCategory: string;
   onCategoryChange: (category: string) => void;
+  user: SupabaseUser | null;
+  onSignOut: () => void;
+  onSignIn: () => void;
 }
 
 const Layout = ({ 
@@ -25,7 +35,10 @@ const Layout = ({
   sidebar, 
   onToggleChat, 
   selectedCategory,
-  onCategoryChange
+  onCategoryChange,
+  user,
+  onSignOut,
+  onSignIn
 }: LayoutProps) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const isMobile = useIsMobile();
@@ -81,6 +94,26 @@ const Layout = ({
                 ))}
               </SelectContent>
             </Select>
+            
+            {user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon">
+                    <User className="h-5 w-5" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem onClick={onSignOut}>
+                    <LogOut className="mr-2 h-4 w-4" />
+                    Sign Out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <Button variant="outline" onClick={onSignIn}>
+                Sign In
+              </Button>
+            )}
           </div>
         </header>
         
@@ -105,7 +138,7 @@ const Layout = ({
             className="fixed bottom-4 right-4 bg-shopping-blue hover:bg-shopping-blue-dark shadow-lg"
           >
             <MessageSquare className="h-5 w-5 mr-2" />
-            Chat with Assistant
+            {user ? 'Chat with Assistant' : 'Sign In to Chat'}
           </Button>
         )}
       </div>

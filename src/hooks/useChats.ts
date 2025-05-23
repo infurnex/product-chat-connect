@@ -1,0 +1,44 @@
+
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
+import { Chat } from '@/types/database';
+import { toast } from 'sonner';
+
+export const useChats = () => {
+  return useQuery({
+    queryKey: ['chats'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('chats')
+        .select('*')
+        .order('created_at', { ascending: false });
+      
+      if (error) throw error;
+      return data as Chat[];
+    },
+  });
+};
+
+export const useCreateChat = () => {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: async (title: string) => {
+      const { data, error } = await supabase
+        .from('chats')
+        .insert([{ title }])
+        .select()
+        .single();
+      
+      if (error) throw error;
+      return data as Chat;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['chats'] });
+      toast.success('New chat created!');
+    },
+    onError: (error: any) => {
+      toast.error('Failed to create chat: ' + error.message);
+    },
+  });
+};

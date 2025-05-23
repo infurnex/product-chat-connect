@@ -9,7 +9,129 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      categories: {
+        Row: {
+          chat_id: string
+          id: string
+          name: string
+        }
+        Insert: {
+          chat_id: string
+          id?: string
+          name: string
+        }
+        Update: {
+          chat_id?: string
+          id?: string
+          name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "categories_chat_id_fkey"
+            columns: ["chat_id"]
+            isOneToOne: false
+            referencedRelation: "chats"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      chats: {
+        Row: {
+          created_at: string
+          id: string
+          title: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          title: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      messages: {
+        Row: {
+          chat_id: string
+          content: string
+          id: string
+          role: Database["public"]["Enums"]["message_role"]
+          timestamp: string
+        }
+        Insert: {
+          chat_id: string
+          content: string
+          id?: string
+          role: Database["public"]["Enums"]["message_role"]
+          timestamp?: string
+        }
+        Update: {
+          chat_id?: string
+          content?: string
+          id?: string
+          role?: Database["public"]["Enums"]["message_role"]
+          timestamp?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "messages_chat_id_fkey"
+            columns: ["chat_id"]
+            isOneToOne: false
+            referencedRelation: "chats"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      products: {
+        Row: {
+          category_id: string
+          description: string | null
+          id: string
+          image_url: string | null
+          name: string
+          price: number
+          ratings: number | null
+          reviews: number | null
+          seller: string
+        }
+        Insert: {
+          category_id: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          name: string
+          price: number
+          ratings?: number | null
+          reviews?: number | null
+          seller: string
+        }
+        Update: {
+          category_id?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          name?: string
+          price?: number
+          ratings?: number | null
+          reviews?: number | null
+          seller?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "products_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -18,7 +140,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      message_role: "user" | "assistant"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -133,6 +255,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      message_role: ["user", "assistant"],
+    },
   },
 } as const
