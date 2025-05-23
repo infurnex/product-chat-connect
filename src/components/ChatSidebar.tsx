@@ -1,10 +1,12 @@
 
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { PlusCircle, MessageSquare, Settings, User } from "lucide-react";
+import { PlusCircle, MessageSquare, Settings, User, Pencil } from "lucide-react";
 import { useChats, useCreateChat } from "@/hooks/useChats";
 import { useAuth } from "./AuthProvider";
 import { format, isToday, isYesterday } from "date-fns";
+import { useState } from "react";
+import { EditChatModal } from "./EditChatModal";
 
 interface ChatSidebarProps {
   onNewChat: () => void;
@@ -16,6 +18,7 @@ const ChatSidebar = ({ onNewChat, selectedChatId, onSelectChat }: ChatSidebarPro
   const { user } = useAuth();
   const { data: chats = [], isLoading } = useChats();
   const createChatMutation = useCreateChat();
+  const [editingChat, setEditingChat] = useState<{ id: string; title: string } | null>(null);
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -41,6 +44,11 @@ const ChatSidebar = ({ onNewChat, selectedChatId, onSelectChat }: ChatSidebarPro
     } catch (error) {
       console.error('Error creating chat:', error);
     }
+  };
+
+  const handleEditChat = (e: React.MouseEvent, chat: { id: string; title: string }) => {
+    e.stopPropagation();
+    setEditingChat(chat);
   };
 
   if (!user) {
@@ -76,7 +84,7 @@ const ChatSidebar = ({ onNewChat, selectedChatId, onSelectChat }: ChatSidebarPro
             chats.map(chat => (
               <div 
                 key={chat.id}
-                className={`flex items-start gap-3 p-3 hover:bg-gray-100 rounded-lg cursor-pointer transition-colors mb-1 ${
+                className={`flex items-start gap-3 p-3 hover:bg-gray-100 rounded-lg cursor-pointer transition-colors mb-1 group ${
                   selectedChatId === chat.id ? 'bg-gray-100' : ''
                 }`}
                 onClick={() => onSelectChat(chat.id)}
@@ -84,8 +92,18 @@ const ChatSidebar = ({ onNewChat, selectedChatId, onSelectChat }: ChatSidebarPro
                 <MessageSquare className="h-5 w-5 mt-1 text-gray-500 shrink-0" />
                 <div className="flex-1 min-w-0">
                   <div className="flex justify-between items-baseline">
-                    <h3 className="font-medium text-sm truncate">{chat.title}</h3>
-                    <span className="text-xs text-gray-500">{formatDate(chat.created_at)}</span>
+                    <h3 className="font-medium text-sm truncate pr-2">{chat.title}</h3>
+                    <div className="flex items-center gap-1">
+                      <span className="text-xs text-gray-500">{formatDate(chat.created_at)}</span>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
+                        onClick={(e) => handleEditChat(e, chat)}
+                      >
+                        <Pencil className="h-3 w-3" />
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -104,6 +122,15 @@ const ChatSidebar = ({ onNewChat, selectedChatId, onSelectChat }: ChatSidebarPro
           Account
         </Button>
       </div>
+
+      {editingChat && (
+        <EditChatModal
+          isOpen={true}
+          onClose={() => setEditingChat(null)}
+          chatId={editingChat.id}
+          currentTitle={editingChat.title}
+        />
+      )}
     </div>
   );
 };

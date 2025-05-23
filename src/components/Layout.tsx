@@ -16,7 +16,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { categories } from "@/data/products";
+import { Category } from "@/types/database";
 import { User as SupabaseUser } from '@supabase/supabase-js';
 
 interface LayoutProps {
@@ -25,6 +25,7 @@ interface LayoutProps {
   onToggleChat: () => void;
   selectedCategory: string;
   onCategoryChange: (category: string) => void;
+  categories: Category[];
   user: SupabaseUser | null;
   onSignOut: () => void;
   onSignIn: () => void;
@@ -36,6 +37,7 @@ const Layout = ({
   onToggleChat, 
   selectedCategory,
   onCategoryChange,
+  categories,
   user,
   onSignOut,
   onSignIn
@@ -95,7 +97,7 @@ const Layout = ({
               </SelectContent>
             </Select>
             
-            {user ? (
+            {user && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="icon">
@@ -109,10 +111,6 @@ const Layout = ({
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
-            ) : (
-              <Button variant="outline" onClick={onSignIn}>
-                Sign In
-              </Button>
             )}
           </div>
         </header>
@@ -138,7 +136,7 @@ const Layout = ({
             className="fixed bottom-4 right-4 bg-shopping-blue hover:bg-shopping-blue-dark shadow-lg"
           >
             <MessageSquare className="h-5 w-5 mr-2" />
-            {user ? 'Chat with Assistant' : 'Sign In to Chat'}
+            Chat with Assistant
           </Button>
         )}
       </div>
