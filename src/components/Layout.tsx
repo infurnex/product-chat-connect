@@ -21,7 +21,7 @@ import { User as SupabaseUser } from '@supabase/supabase-js';
 
 interface LayoutProps {
   children: React.ReactNode;
-  sidebar: React.ReactNode;
+  sidebar: React.ReactElement;
   onToggleChat: () => void;
   selectedCategory: string;
   onCategoryChange: (category: string) => void;
@@ -53,6 +53,9 @@ const Layout = ({
   const toggleSidebarCollapse = () => {
     setSidebarCollapsed(!sidebarCollapsed);
   };
+
+  // Clone the sidebar element and pass the collapsed prop
+  const sidebarWithProps = React.cloneElement(sidebar, { isCollapsed: sidebarCollapsed && !isMobile });
   
   return (
     <div className="flex h-screen w-full bg-white overflow-hidden">
@@ -85,7 +88,7 @@ const Layout = ({
         )}
         
         <div className={`${sidebarCollapsed && !isMobile ? 'overflow-hidden' : ''}`}>
-          {sidebar}
+          {sidebarWithProps}
         </div>
       </div>
       

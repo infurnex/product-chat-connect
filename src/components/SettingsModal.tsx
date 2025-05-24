@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -27,13 +27,22 @@ const SettingsModal = ({ isOpen, onClose }: SettingsModalProps) => {
   const { data: preferences } = useUserPreferences();
   const updatePreferences = useUpdateUserPreferences();
   
-  const [gender, setGender] = useState(preferences?.gender || '');
-  const [country, setCountry] = useState(preferences?.country || '');
-  const [language, setLanguage] = useState(preferences?.language || 'English');
+  const [gender, setGender] = useState('');
+  const [country, setCountry] = useState('');
+  const [language, setLanguage] = useState('English');
+
+  // Update local state when preferences load
+  useEffect(() => {
+    if (preferences) {
+      setGender(preferences.gender || 'prefer-not-to-say');
+      setCountry(preferences.country || '');
+      setLanguage(preferences.language || 'English');
+    }
+  }, [preferences]);
 
   const handleSave = () => {
     updatePreferences.mutate({
-      gender: gender || undefined,
+      gender: gender === 'prefer-not-to-say' ? undefined : gender,
       country: country || undefined,
       language,
     });
@@ -54,7 +63,7 @@ const SettingsModal = ({ isOpen, onClose }: SettingsModalProps) => {
                 <SelectValue placeholder="Select gender" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Prefer not to say</SelectItem>
+                <SelectItem value="prefer-not-to-say">Prefer not to say</SelectItem>
                 <SelectItem value="male">Male</SelectItem>
                 <SelectItem value="female">Female</SelectItem>
                 <SelectItem value="other">Other</SelectItem>

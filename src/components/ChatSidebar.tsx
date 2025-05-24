@@ -14,9 +14,10 @@ interface ChatSidebarProps {
   onNewChat: () => void;
   selectedChatId: string | null;
   onSelectChat: (chatId: string) => void;
+  isCollapsed?: boolean;
 }
 
-const ChatSidebar = ({ onNewChat, selectedChatId, onSelectChat }: ChatSidebarProps) => {
+const ChatSidebar = ({ onNewChat, selectedChatId, onSelectChat, isCollapsed = false }: ChatSidebarProps) => {
   const { user } = useAuth();
   const { data: chats = [], isLoading } = useChats();
   const createChatMutation = useCreateChat();
@@ -58,8 +59,70 @@ const ChatSidebar = ({ onNewChat, selectedChatId, onSelectChat }: ChatSidebarPro
   if (!user) {
     return (
       <div className="w-full h-full bg-gray-50 border-r border-gray-200 flex flex-col items-center justify-center p-4">
-        <MessageSquare className="h-12 w-12 text-gray-400 mb-4" />
-        <p className="text-gray-500 text-center">Sign in to access your chat history</p>
+        {isCollapsed ? (
+          <MessageSquare className="h-8 w-8 text-gray-400" />
+        ) : (
+          <>
+            <MessageSquare className="h-12 w-12 text-gray-400 mb-4" />
+            <p className="text-gray-500 text-center">Sign in to access your chat history</p>
+          </>
+        )}
+      </div>
+    );
+  }
+
+  if (isCollapsed) {
+    return (
+      <div className="w-full h-full bg-gray-50 border-r border-gray-200 flex flex-col items-center py-4">
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          onClick={handleNewChat}
+          disabled={createChatMutation.isPending}
+          className="mb-4"
+        >
+          <PlusCircle className="h-5 w-5" />
+        </Button>
+        
+        <ScrollArea className="flex-1 w-full">
+          <div className="flex flex-col items-center gap-2 px-2">
+            {chats.slice(0, 5).map(chat => (
+              <Button
+                key={chat.id}
+                variant="ghost"
+                size="icon"
+                className={`w-8 h-8 ${selectedChatId === chat.id ? 'bg-gray-100' : ''}`}
+                onClick={() => onSelectChat(chat.id)}
+                title={chat.title}
+              >
+                <MessageSquare className="h-4 w-4" />
+              </Button>
+            ))}
+          </div>
+        </ScrollArea>
+        
+        <div className="border-t border-gray-200 pt-2 flex flex-col gap-1">
+          <Button 
+            variant="ghost" 
+            size="icon"
+            onClick={() => setShowSettings(true)}
+            title="Settings"
+          >
+            <Settings className="h-4 w-4" />
+          </Button>
+          <Button 
+            variant="ghost" 
+            size="icon"
+            title="Account"
+          >
+            <User className="h-4 w-4" />
+          </Button>
+        </div>
+
+        <SettingsModal
+          isOpen={showSettings}
+          onClose={() => setShowSettings(false)}
+        />
       </div>
     );
   }

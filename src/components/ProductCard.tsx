@@ -2,7 +2,7 @@
 import { Product } from "@/types/database";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Eye, ShoppingCart, Star } from "lucide-react";
+import { Eye, CreditCard, Star } from "lucide-react";
 import { toast } from "sonner";
 
 interface ProductCardProps {
@@ -10,12 +10,17 @@ interface ProductCardProps {
 }
 
 const ProductCard = ({ product }: ProductCardProps) => {
-  const handleAddToCart = () => {
-    toast.success(`${product.name} added to cart!`);
+  const handleCheckout = () => {
+    toast.success(`Proceeding to checkout for ${product.name}!`);
   };
 
   const handleViewDetails = () => {
     toast.info(`Viewing details for ${product.name}`);
+  };
+
+  const truncateTitle = (title: string, maxLength: number = 30) => {
+    if (title.length <= maxLength) return title;
+    return title.slice(0, maxLength) + "...";
   };
 
   return (
@@ -33,7 +38,9 @@ const ProductCard = ({ product }: ProductCardProps) => {
         </div>
       </CardHeader>
       <CardContent className="py-4 flex-grow">
-        <h3 className="font-medium text-lg mb-1">{product.name}</h3>
+        <h3 className="font-medium text-lg mb-1" title={product.name}>
+          {truncateTitle(product.name)}
+        </h3>
         <p className="text-sm text-gray-500 line-clamp-2 mb-2">{product.description}</p>
         {product.ratings && product.reviews && (
           <div className="flex items-center gap-1 mb-2">
@@ -56,9 +63,9 @@ const ProductCard = ({ product }: ProductCardProps) => {
         <Button 
           className="w-full bg-shopping-blue hover:bg-shopping-blue-dark" 
           size="sm"
-          onClick={handleAddToCart}
+          onClick={handleCheckout}
         >
-          <ShoppingCart className="w-4 h-4 mr-2" /> Add to Cart
+          <CreditCard className="w-4 h-4 mr-2" /> Checkout
         </Button>
       </CardFooter>
     </Card>
