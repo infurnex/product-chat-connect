@@ -121,7 +121,7 @@ const ChatWindow = ({ onClose, chatId, onChatCreated }: ChatWindowProps) => {
   }));
 
   // Add welcome message if no messages exist
-  const displayMessages = formattedMessages.length === 0 ? [
+  const displayMessages = ( formattedMessages.length === 0 && !isLoading ) ? [
     {
       id: "welcome",
       content: "Hello! I'm your product assistant. How can I help you today?",
