@@ -7,6 +7,8 @@ import ChatMessage from "./ChatMessage";
 import { useMessages, useCreateMessage } from "@/hooks/useMessages";
 import { useCreateChat } from "@/hooks/useChats";
 import { Message } from "@/types/database";
+import { set } from "date-fns";
+import AiLoader from "./ui/aiLoader";
 
 interface ChatWindowProps {
   onClose: () => void;
@@ -20,6 +22,7 @@ const ChatWindow = ({ onClose, chatId, onChatCreated }: ChatWindowProps) => {
   const createMessageMutation = useCreateMessage();
   const createChatMutation = useCreateChat();
   const [image, setImage] = useState<any>();
+  const [waitingForAI, setWaitingForAI] = useState(false);
 
   const fileInputRef = useRef(null);
   
@@ -44,11 +47,21 @@ const ChatWindow = ({ onClose, chatId, onChatCreated }: ChatWindowProps) => {
     
     // Add user message
     try {
+
+      if (image) {
+        await createMessageMutation.mutateAsync({
+        chatId: currentChatId,
+        role: 'user',
+        content: `📷 "${image.name}"`,
+        });
+      }
       await createMessageMutation.mutateAsync({
         chatId: currentChatId,
         role: 'user',
         content: message,
       });
+
+      setWaitingForAI(true);
 
       // fetching results from ai agent
       const formData = new FormData();
@@ -62,10 +75,12 @@ const ChatWindow = ({ onClose, chatId, onChatCreated }: ChatWindowProps) => {
       setMessage("");
       setImage("");
       
-      const AIresponse = await fetch("http://localhost:5678/webhook-test/agent", {
+      const AIresponse = await fetch("https://infur.app.n8n.cloud/webhook/agent", {
         method: "POST",
         body: formData,
       });;
+
+      
 
       if(!AIresponse.ok) {
         throw new Error("Failed to fetch AI response");
@@ -78,6 +93,8 @@ const ChatWindow = ({ onClose, chatId, onChatCreated }: ChatWindowProps) => {
         role: 'assistant',
         content: aimessage,
       });
+
+      setWaitingForAI(false);
 
     } catch (error) {
       console.error('Error creating user message:', error);
@@ -132,11 +149,14 @@ const ChatWindow = ({ onClose, chatId, onChatCreated }: ChatWindowProps) => {
             {displayMessages.map((msg) => (
               <ChatMessage key={msg.id} message={msg} />
             ))}
+            {
+              waitingForAI && <AiLoader/>
+            }
             <div ref={messagesEndRef} />
           </>
         )}
       </div>
-      
+            
       <div className="p-3 border-t border-gray-200 bg-gray-50 flex items-center gap-2">
         <input
           id="file-upload"
@@ -146,16 +166,16 @@ const ChatWindow = ({ onClose, chatId, onChatCreated }: ChatWindowProps) => {
           accept="image/*"
           onChange={(e) => setImage(e.target.files[0])}
         />
-        <Button variant="ghost" size="icon" className="h-8 w-8 flex-shrink-0 text-gray-500"
+        <Button variant="ghost" size="icon" className="h-8 w-8 gap-0 text-gray-500"
           onClick={() => fileInputRef.current?.click()}
-        >
-          <Paperclip className="h-4 w-4" />
+        > 
           {
             image ?
-            <div>0</div>
+            <div>1️⃣</div>
             :
-            <div>1</div>
+            <div>0️⃣</div>
           }
+          <Paperclip className="h-4 w-4" />
         </Button>
 
         <Input

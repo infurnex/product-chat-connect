@@ -14,11 +14,11 @@ const ProductCard = ({ product }: ProductCardProps) => {
     toast.success(`Proceeding to checkout for ${product.name}!`);
   };
 
-  const handleViewDetails = () => {
-    toast.info(`Viewing details for ${product.name}`);
+  const handleViewDetails = (source: string) => {
+    window.open(source, "_blank");
   };
 
-  const truncateTitle = (title: string, maxLength: number = 30) => {
+  const truncateTitle = (title: string, maxLength: number = 80) => {
     if (title.length <= maxLength) return title;
     return title.slice(0, maxLength) + "...";
   };
@@ -56,7 +56,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
           variant="outline" 
           className="w-full" 
           size="sm"
-          onClick={handleViewDetails}
+          onClick={() => handleViewDetails(product.source)}
         >
           <Eye className="w-4 h-4 mr-2" /> View Details
         </Button>

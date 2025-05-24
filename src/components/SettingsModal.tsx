@@ -26,10 +26,16 @@ interface SettingsModalProps {
 const SettingsModal = ({ isOpen, onClose }: SettingsModalProps) => {
   const { data: preferences } = useUserPreferences();
   const updatePreferences = useUpdateUserPreferences();
-  
-  const [gender, setGender] = useState('');
+  const [gender, setGender] = useState('prefer-not-to-say');
   const [country, setCountry] = useState('');
   const [language, setLanguage] = useState('English');
+  const [age, setAge] = useState<number | null>(preferences?.age || undefined);
+  const [name, setName] = useState(preferences?.name || '');
+  const [budget, setBudget] = useState('');
+  const [categories, setCategories] = useState('');
+  const [brands, setBrands] = useState('');
+  const [eco, setEco] = useState('no-preference');
+  const [shipping, setShipping] = useState('no-preference');
 
   // Update local state when preferences load
   useEffect(() => {
@@ -37,6 +43,13 @@ const SettingsModal = ({ isOpen, onClose }: SettingsModalProps) => {
       setGender(preferences.gender || 'prefer-not-to-say');
       setCountry(preferences.country || '');
       setLanguage(preferences.language || 'English');
+      setAge(preferences.age || null);
+      setName(preferences.name || '');
+      setBudget(preferences.budget || '');
+      setCategories(preferences.categories || '');
+      setBrands(preferences.brands || '');
+      setEco(preferences.eco || 'no-preference');
+      setShipping(preferences.shipping || 'no-preference');
     }
   }, [preferences]);
 
@@ -45,6 +58,13 @@ const SettingsModal = ({ isOpen, onClose }: SettingsModalProps) => {
       gender: gender === 'prefer-not-to-say' ? undefined : gender,
       country: country || undefined,
       language,
+      age: age ? age : null,
+      name: name,
+      budget: budget || undefined,
+      categories: categories || undefined,
+      brands: brands || undefined,
+      eco: eco === 'no-preference' ? undefined : eco,
+      shipping: shipping === 'no-preference' ? undefined : shipping,   
     });
     onClose();
   };
@@ -53,9 +73,19 @@ const SettingsModal = ({ isOpen, onClose }: SettingsModalProps) => {
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Settings</DialogTitle>
+          <DialogTitle>Preferences</DialogTitle>
         </DialogHeader>
         <div className="grid gap-4 py-4">
+          <div className="grid gap-2">
+            <Label htmlFor="name">name</Label>
+            <Input
+              id="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Enter your name"
+            />
+          </div>
+
           <div className="grid gap-2">
             <Label htmlFor="gender">Gender</Label>
             <Select value={gender} onValueChange={setGender}>
@@ -69,6 +99,16 @@ const SettingsModal = ({ isOpen, onClose }: SettingsModalProps) => {
                 <SelectItem value="other">Other</SelectItem>
               </SelectContent>
             </Select>
+          </div>
+
+          <div className="grid gap-2">
+            <Label htmlFor="age">Age</Label>
+            <Input
+              id="age"
+              value={age}
+              onChange={(e) => setAge(Number(e.target.value))}
+              placeholder="Enter your age"
+            />
           </div>
           
           <div className="grid gap-2">
@@ -100,6 +140,65 @@ const SettingsModal = ({ isOpen, onClose }: SettingsModalProps) => {
                 <SelectItem value="Arabic">Arabic</SelectItem>
                 <SelectItem value="Hindi">Hindi</SelectItem>
                 <SelectItem value="Russian">Russian</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="grid gap-2">
+            <Label htmlFor="budget">Budget Range (USD)</Label>
+            <Input
+              id="budget"
+              value={budget}
+              onChange={(e) => setBudget(e.target.value)}
+              placeholder="e.g. under 100, 50-200, no limit"
+            />
+          </div>
+
+          <div className="grid gap-2">
+            <Label htmlFor="categories">Preferred Categories</Label>
+            <Input
+              id="categories"
+              value={categories}
+              onChange={(e) => setCategories(e.target.value)}
+              placeholder="e.g. fashion, electronics, home decor"
+            />
+          </div>
+
+          <div className="grid gap-2">
+            <Label htmlFor="brands">Preferred Brands</Label>
+            <Input
+              id="brands"
+              value={brands}
+              onChange={(e) => setBrands(e.target.value)}
+              placeholder="e.g. Nike, Apple, Zara"
+            />
+          </div>
+
+          <div className="grid gap-2">
+            <Label htmlFor="eco">Sustainability Preference</Label>
+            <Select value={eco} onValueChange={setEco}>
+              <SelectTrigger>
+                <SelectValue placeholder="Choose preference" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="no-preference">No Preference</SelectItem>
+                <SelectItem value="eco-friendly">Eco-friendly</SelectItem>
+                <SelectItem value="vegan">Vegan only</SelectItem>
+                <SelectItem value="cruelty-free">Cruelty-free</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="grid gap-2">
+            <Label htmlFor="shipping">Preferred Delivery Speed</Label>
+            <Select value={shipping} onValueChange={setShipping}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select delivery preference" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="fast">Fast (same/next day)</SelectItem>
+                <SelectItem value="standard">Standard</SelectItem>
+                <SelectItem value="no-preference">No Preference</SelectItem>
               </SelectContent>
             </Select>
           </div>

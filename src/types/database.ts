@@ -30,6 +30,7 @@ export interface Product {
   description: string | null;
   image_url: string | null;
   price: number;
+  source: string;
 }
 
 export interface UserPreferences {

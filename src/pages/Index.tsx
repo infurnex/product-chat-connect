@@ -25,7 +25,6 @@ const Index = () => {
   };
   
   const handleNewChat = () => {
-    setSelectedChatId(null);
     setShowChat(true);
   };
 
@@ -120,6 +119,7 @@ const Index = () => {
           />
         }
         onToggleChat={toggleChat}
+        selectedChatID = {selectedChatId}
         selectedCategory={selectedCategory}
         onCategoryChange={setSelectedCategory}
         categories={categories}

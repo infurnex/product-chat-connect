@@ -186,11 +186,7 @@ const ChatSidebar = ({ onNewChat, selectedChatId, onSelectChat, isCollapsed = fa
           onClick={() => setShowSettings(true)}
         >
           <Settings className="mr-2 h-4 w-4" />
-          Settings
-        </Button>
-        <Button variant="ghost" className="w-full justify-start text-gray-600 hover:text-gray-900 hover:bg-gray-100">
-          <User className="mr-2 h-4 w-4" />
-          Account
+          Preferences
         </Button>
       </div>
 

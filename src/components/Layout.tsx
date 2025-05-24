@@ -23,6 +23,7 @@ interface LayoutProps {
   children: React.ReactNode;
   sidebar: React.ReactElement;
   onToggleChat: () => void;
+  selectedChatID?: string | null;
   selectedCategory: string;
   onCategoryChange: (category: string) => void;
   categories: Category[];
@@ -34,7 +35,8 @@ interface LayoutProps {
 const Layout = ({ 
   children, 
   sidebar, 
-  onToggleChat, 
+  onToggleChat,
+  selectedChatID, 
   selectedCategory,
   onCategoryChange,
   categories,
@@ -152,7 +154,7 @@ const Layout = ({
         )}
         
         {/* Chat button (desktop) */}
-        {!isMobile && (
+        {!isMobile && selectedChatID &&(
           <Button 
             onClick={onToggleChat}
             className="fixed bottom-4 right-4 bg-shopping-blue hover:bg-shopping-blue-dark shadow-lg"
