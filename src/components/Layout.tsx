@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
-import { MessageSquare, Menu, X, User, LogOut } from "lucide-react";
+import { MessageSquare, Menu, X, User, LogOut, ChevronLeft, ChevronRight } from "lucide-react";
 import { 
   Select, 
   SelectContent, 
@@ -43,10 +43,15 @@ const Layout = ({
   onSignIn
 }: LayoutProps) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const isMobile = useIsMobile();
   
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
+  };
+
+  const toggleSidebarCollapse = () => {
+    setSidebarCollapsed(!sidebarCollapsed);
   };
   
   return (
@@ -64,10 +69,24 @@ const Layout = ({
         className={`${
           isMobile 
             ? `fixed inset-y-0 left-0 z-30 w-72 transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`
-            : 'w-72'
-        } transition-transform duration-200 ease-in-out`}
+            : `${sidebarCollapsed ? 'w-16' : 'w-72'}`
+        } transition-all duration-200 ease-in-out relative`}
       >
-        {sidebar}
+        {/* Desktop collapse button */}
+        {!isMobile && (
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={toggleSidebarCollapse}
+            className="absolute -right-3 top-4 z-40 h-6 w-6 rounded-full border bg-white shadow-md hover:bg-gray-50"
+          >
+            {sidebarCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
+          </Button>
+        )}
+        
+        <div className={`${sidebarCollapsed && !isMobile ? 'overflow-hidden' : ''}`}>
+          {sidebar}
+        </div>
       </div>
       
       {/* Main content */}

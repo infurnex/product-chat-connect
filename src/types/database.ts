@@ -31,3 +31,13 @@ export interface Product {
   image_url: string | null;
   price: number;
 }
+
+export interface UserPreferences {
+  id: string;
+  user_id: string;
+  gender?: string;
+  country?: string;
+  language: string;
+  created_at: string;
+  updated_at: string;
+}

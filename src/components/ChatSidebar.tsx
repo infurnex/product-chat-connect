@@ -7,6 +7,8 @@ import { useAuth } from "./AuthProvider";
 import { format, isToday, isYesterday } from "date-fns";
 import { useState } from "react";
 import { EditChatModal } from "./EditChatModal";
+import SettingsModal from "./SettingsModal";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface ChatSidebarProps {
   onNewChat: () => void;
@@ -19,6 +21,8 @@ const ChatSidebar = ({ onNewChat, selectedChatId, onSelectChat }: ChatSidebarPro
   const { data: chats = [], isLoading } = useChats();
   const createChatMutation = useCreateChat();
   const [editingChat, setEditingChat] = useState<{ id: string; title: string } | null>(null);
+  const [showSettings, setShowSettings] = useState(false);
+  const isMobile = useIsMobile();
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -113,7 +117,11 @@ const ChatSidebar = ({ onNewChat, selectedChatId, onSelectChat }: ChatSidebarPro
       </ScrollArea>
       
       <div className="border-t border-gray-200 p-2">
-        <Button variant="ghost" className="w-full justify-start text-gray-600 hover:text-gray-900 hover:bg-gray-100 mb-1">
+        <Button 
+          variant="ghost" 
+          className="w-full justify-start text-gray-600 hover:text-gray-900 hover:bg-gray-100 mb-1"
+          onClick={() => setShowSettings(true)}
+        >
           <Settings className="mr-2 h-4 w-4" />
           Settings
         </Button>
@@ -131,6 +139,11 @@ const ChatSidebar = ({ onNewChat, selectedChatId, onSelectChat }: ChatSidebarPro
           currentTitle={editingChat.title}
         />
       )}
+
+      <SettingsModal
+        isOpen={showSettings}
+        onClose={() => setShowSettings(false)}
+      />
     </div>
   );
 };

@@ -5,11 +5,11 @@ import Layout from "@/components/Layout";
 import ChatSidebar from "@/components/ChatSidebar";
 import ChatWindow from "@/components/ChatWindow";
 import ProductCard from "@/components/ProductCard";
-import { useCategories, useProducts } from "@/hooks/useProducts";
+import { useCategoriesRealtime, useProductsRealtime } from "@/hooks/useProducts";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { MessageSquare } from "lucide-react";
+import { MessageSquare, Search } from "lucide-react";
 
 const Index = () => {
   const { user } = useAuth();
@@ -17,8 +17,8 @@ const Index = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
   
-  const { data: categories = [] } = useCategories(selectedChatId);
-  const { data: products = [] } = useProducts(selectedCategory, selectedChatId);
+  const { data: categories = [] } = useCategoriesRealtime(selectedChatId);
+  const { data: products = [] } = useProductsRealtime(selectedCategory, selectedChatId);
   
   const toggleChat = () => {
     setShowChat(!showChat);
@@ -56,13 +56,31 @@ const Index = () => {
     if (categories.length === 0 || products.length === 0) {
       return (
         <div className="flex flex-col items-center justify-center h-full text-center p-8">
-          <MessageSquare className="h-16 w-16 text-gray-400 mb-4" />
-          <h2 className="text-2xl font-bold text-gray-600 mb-2">No Products Yet</h2>
-          <p className="text-gray-500 mb-6">Chat with AI assistant and it will fetch products for you</p>
-          <Button onClick={toggleChat} className="bg-shopping-blue hover:bg-shopping-blue-dark">
-            <MessageSquare className="h-5 w-5 mr-2" />
-            Chat with Assistant
-          </Button>
+          {categories.length === 0 ? (
+            <>
+              <MessageSquare className="h-16 w-16 text-gray-400 mb-4" />
+              <h2 className="text-2xl font-bold text-gray-600 mb-2">No Products Yet</h2>
+              <p className="text-gray-500 mb-6">Chat with AI assistant and it will fetch products for you</p>
+              <Button onClick={toggleChat} className="bg-shopping-blue hover:bg-shopping-blue-dark">
+                <MessageSquare className="h-5 w-5 mr-2" />
+                Chat with Assistant
+              </Button>
+            </>
+          ) : (
+            <>
+              <Search className="h-16 w-16 text-gray-400 mb-4" />
+              <h2 className="text-2xl font-bold text-gray-600 mb-2">No Products Found</h2>
+              <p className="text-gray-500 mb-6">
+                {selectedCategory === "all" 
+                  ? "No products available in this chat yet" 
+                  : `No products found in "${categories.find(cat => cat.id === selectedCategory)?.name}" category`}
+              </p>
+              <Button onClick={toggleChat} className="bg-shopping-blue hover:bg-shopping-blue-dark">
+                <MessageSquare className="h-5 w-5 mr-2" />
+                Ask AI for More Products
+              </Button>
+            </>
+          )}
         </div>
       );
     }

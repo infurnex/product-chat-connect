@@ -1,5 +1,6 @@
 
 import { useQuery } from '@tanstack/react-query';
+import { useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Product, Category } from '@/types/database';
 
@@ -56,4 +57,71 @@ export const useProducts = (categoryId?: string, chatId?: string | null) => {
     },
     enabled: !!chatId,
   });
+};
+
+// Real-time hook for categories
+export const useCategoriesRealtime = (chatId?: string | null) => {
+  const query = useCategories(chatId);
+
+  useEffect(() => {
+    if (!chatId) return;
+
+    const channel = supabase
+      .channel('categories-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'categories',
+          filter: `chat_id=eq.${chatId}`
+        },
+        () => {
+          query.refetch();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [chatId, query]);
+
+  return query;
+};
+
+// Real-time hook for products
+export const useProductsRealtime = (categoryId?: string, chatId?: string | null) => {
+  const query = useProducts(categoryId, chatId);
+
+  useEffect(() => {
+    if (!chatId) return;
+
+    const channel = supabase
+      .channel('products-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'products'
+        },
+        (payload) => {
+          // Only refetch if the change is relevant to this chat
+          if (payload.eventType === 'INSERT' || payload.eventType === 'UPDATE') {
+            // We need to check if this product belongs to a category in this chat
+            query.refetch();
+          } else if (payload.eventType === 'DELETE') {
+            query.refetch();
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [categoryId, chatId, query]);
+
+  return query;
 };
