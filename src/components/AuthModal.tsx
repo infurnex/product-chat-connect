@@ -69,14 +69,6 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
           <Button type="submit" className="w-full" disabled={loading}>
             {loading ? 'Loading...' : isSignUp ? 'Sign Up' : 'Sign In'}
           </Button>
-          <Button
-            type="button"
-            variant="ghost"
-            className="w-full"
-            onClick={() => setIsSignUp(!isSignUp)}
-          >
-            {isSignUp ? 'Already have an account? Sign In' : "Don't have an account? Sign Up"}
-          </Button>
         </form>
       </DialogContent>
     </Dialog>
