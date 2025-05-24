@@ -68,16 +68,15 @@ const Index = () => {
           ) : (
             <>
               <Search className="h-16 w-16 text-gray-400 mb-4" />
-              <h2 className="text-2xl font-bold text-gray-600 mb-2">No Products Found</h2>
+              <h2 className="text-2xl font-bold text-gray-600 mb-2">Searching Products...</h2>
               <p className="text-gray-500 mb-6">
                 {selectedCategory === "all" 
                   ? "No products available in this chat yet" 
-                  : `No products found in "${categories.find(cat => cat.id === selectedCategory)?.name}" category`}
+                  : `searching for products in "${categories.find(cat => cat.id === selectedCategory)?.name}" category`}
               </p>
-              <Button onClick={toggleChat} className="bg-shopping-blue hover:bg-shopping-blue-dark">
-                <MessageSquare className="h-5 w-5 mr-2" />
-                Ask AI for More Products
-              </Button>
+              <p className="text-gray-500 mb-6">
+                if it takes too long, try changing the category or starting a new chat.
+              </p>
             </>
           )}
         </div>
