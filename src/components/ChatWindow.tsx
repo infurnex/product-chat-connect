@@ -150,6 +150,12 @@ const ChatWindow = ({ onClose, chatId, onChatCreated }: ChatWindowProps) => {
           onClick={() => fileInputRef.current?.click()}
         >
           <Paperclip className="h-4 w-4" />
+          {
+            image ?
+            <div>0</div>
+            :
+            <div>1</div>
+          }
         </Button>
 
         <Input
