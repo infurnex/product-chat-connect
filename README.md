@@ -42,7 +42,7 @@ An intelligent shopping assistant that helps users find the perfect products bas
 
 ### 🧩 AI Workflow in n8n
 Here’s how the workflow looks inside n8n:
-![AI Product Finder Workflow](./assets/n8n-workflow.png)
+![AI Product Finder Workflow]((https://drive.google.com/file/d/1rRtTgGbOSElEKfapanql4W74e_dYiGXM/view?usp=drive_link))
 
 ---
 
