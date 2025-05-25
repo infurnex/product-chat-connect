@@ -44,7 +44,7 @@ An intelligent shopping assistant that helps users find the perfect products bas
 
 ## 🌐 Live Website
 
-The app is live at: **[xx](https://product-chat-connect.lovable.app/)**  
+The app is live at: **[Take me there](https://product-chat-connect.lovable.app/)**  
 🔐 **Credentials**:  
 - Shared in pptx.
 
