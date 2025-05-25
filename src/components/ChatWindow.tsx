@@ -2,12 +2,11 @@
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { X, Send, Paperclip } from "lucide-react";
+import { X, Send, Paperclip, CheckCircle } from "lucide-react";
 import ChatMessage from "./ChatMessage";
 import { useMessages, useCreateMessage } from "@/hooks/useMessages";
 import { useCreateChat } from "@/hooks/useChats";
 import { Message } from "@/types/database";
-import { set } from "date-fns";
 import AiLoader from "./ui/aiLoader";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -22,15 +21,14 @@ const ChatWindow = ({ onClose, chatId, onChatCreated }: ChatWindowProps) => {
   const { data: messages = [], isLoading } = useMessages(chatId);
   const createMessageMutation = useCreateMessage();
   const createChatMutation = useCreateChat();
-  const [image, setImage] = useState<any>();
+  const [image, setImage] = useState<File | null>(null);
   const [waitingForAI, setWaitingForAI] = useState(false);
 
-  const fileInputRef = useRef(null);
-  
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const handleSend = async () => {
-    if (!message.trim()) return;
+    if (!message.trim() && !image) return;
     
     let currentChatId = chatId;
     
@@ -48,20 +46,25 @@ const ChatWindow = ({ onClose, chatId, onChatCreated }: ChatWindowProps) => {
     
     // Add user message
     try {
+      
       const { data: { user } } = await supabase.auth.getUser();
 
       if (image) {
         await createMessageMutation.mutateAsync({
-        chatId: currentChatId,
-        role: 'user',
-        content: `📷 "${image.name}"`,
+          chatId: currentChatId,
+          role: 'user',
+          content: `${image.name}📷`,
         });
       }
-      await createMessageMutation.mutateAsync({
-        chatId: currentChatId,
-        role: 'user',
-        content: message,
-      });
+      
+      // Add text message if present
+      if (message.trim()) {
+        await createMessageMutation.mutateAsync({
+          chatId: currentChatId,
+          role: 'user',
+          content: message,
+        });
+      }
 
       setWaitingForAI(true);
 
@@ -76,14 +79,12 @@ const ChatWindow = ({ onClose, chatId, onChatCreated }: ChatWindowProps) => {
       formData.append("imageAttached", image ? "true" : "false");
       
       setMessage("");
-      setImage("");
+      setImage(null);
       
       const AIresponse = await fetch("https://infur.app.n8n.cloud/webhook/agent", {
         method: "POST",
         body: formData,
-      });;
-
-      
+      });
 
       if(!AIresponse.ok) {
         throw new Error("Failed to fetch AI response");
@@ -101,12 +102,27 @@ const ChatWindow = ({ onClose, chatId, onChatCreated }: ChatWindowProps) => {
 
     } catch (error) {
       console.error('Error creating user message:', error);
+      setWaitingForAI(false);
     }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       handleSend();
+    }
+  };
+
+  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setImage(file);
+    }
+  };
+
+  const removeImage = () => {
+    setImage(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
     }
   };
 
@@ -152,13 +168,39 @@ const ChatWindow = ({ onClose, chatId, onChatCreated }: ChatWindowProps) => {
             {displayMessages.map((msg) => (
               <ChatMessage key={msg.id} message={msg} />
             ))}
-            {
-              waitingForAI && <AiLoader/>
-            }
+            {waitingForAI && <AiLoader/>}
             <div ref={messagesEndRef} />
           </>
         )}
       </div>
+
+      {/* Image preview */}
+      {image && (
+        <div className="px-3 py-2 border-t border-gray-200 bg-gray-50">
+          <div className="flex items-center gap-2 p-2 bg-white rounded border border-green-200">
+            <img 
+              src={URL.createObjectURL(image)} 
+              alt="Preview" 
+              className="w-8 h-8 object-cover rounded"
+            />
+            <div className="flex-1 min-w-0">
+              <p className="text-sm text-gray-600 truncate">{image.name}</p>
+              <div className="flex items-center gap-1 text-xs text-green-600">
+                <CheckCircle className="w-3 h-3" />
+                <span>Ready to send</span>
+              </div>
+            </div>
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="h-6 w-6 text-gray-400 hover:text-gray-600"
+              onClick={removeImage}
+            >
+              <X className="h-3 w-3" />
+            </Button>
+          </div>
+        </div>
+      )}
             
       <div className="p-3 border-t border-gray-200 bg-gray-50 flex items-center gap-2">
         <input
@@ -167,17 +209,14 @@ const ChatWindow = ({ onClose, chatId, onChatCreated }: ChatWindowProps) => {
           className="hidden"
           type="file"
           accept="image/*"
-          onChange={(e) => setImage(e.target.files[0])}
+          onChange={handleImageSelect}
         />
-        <Button variant="ghost" size="icon" className="h-8 w-8 gap-0 text-gray-500"
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          className={`h-8 w-8 ${image ? 'text-green-600 bg-green-50' : 'text-gray-500'}`}
           onClick={() => fileInputRef.current?.click()}
         > 
-          {
-            image ?
-            <div>1️⃣</div>
-            :
-            <div>0️⃣</div>
-          }
           <Paperclip className="h-4 w-4" />
         </Button>
 
@@ -187,12 +226,12 @@ const ChatWindow = ({ onClose, chatId, onChatCreated }: ChatWindowProps) => {
           onChange={(e) => setMessage(e.target.value)}
           onKeyDown={handleKeyDown}
           className="flex-grow border-gray-300"
-          disabled={createMessageMutation.isPending}
+          disabled={createMessageMutation.isPending || waitingForAI}
         />
         <Button
           onClick={handleSend}
           className="h-8 w-8 p-0 bg-shopping-blue hover:bg-shopping-blue-dark flex-shrink-0"
-          disabled={createMessageMutation.isPending || !message.trim()}
+          disabled={createMessageMutation.isPending || waitingForAI || (!message.trim() && !image)}
         >
           <Send className="h-4 w-4" />
         </Button>
