@@ -42,25 +42,25 @@ An intelligent shopping assistant that helps users find the perfect products bas
 
 ---
 
-## 🛠️ Tech Stack
-- **React** for UI dialogs and preference forms
-- **Node.js** for backend services
-- **n8n** workflow automation for orchestrating the AI agent
-- **AI Agent** powered by GPT-4 for understanding and assisting users
-- **Web scraping tools** to fetch real-time product data
+## 🌐 Live Website
+
+The app is live at: **[xx](xx)**  
+🔐 **Credentials**:  
+- Username: `Sss`
 
 ---
 
-## 📎 Example Use Cases
-- Personal shopping concierge for fashion e-commerce
-- Style assistant for digital wardrobe apps
-- Gift suggestion bot for personalized occasions
+## 🧪 Demo
+
+🎥 **Demo Video**: [Watch the demo](#)  
+_(Replace the link with the actual video URL)_
 
 ---
 
-## 📬 Feedback & Contributions
-We’re open to feature suggestions, feedback, or contributions! Open an issue or pull request to help improve the project.
+## 💻 Running Locally
 
----
-
-
+```bash
+git clone <repo-url>
+cd <project-folder>
+npm install
+npm run dev
