@@ -73,18 +73,20 @@ const ChatSidebar = ({ onNewChat, selectedChatId, onSelectChat, isCollapsed = fa
 
   if (isCollapsed) {
     return (
-      <div className="w-full h-full bg-gray-50 border-r border-gray-200 flex flex-col items-center py-4">
-        <Button 
-          variant="ghost" 
-          size="icon" 
-          onClick={handleNewChat}
-          disabled={createChatMutation.isPending}
-          className="mb-4"
-        >
-          <PlusCircle className="h-5 w-5" />
-        </Button>
+      <div className="w-full h-full bg-gray-50 border-r border-gray-200 flex flex-col">
+        <div className="p-2">
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            onClick={handleNewChat}
+            disabled={createChatMutation.isPending}
+            className="w-full"
+          >
+            <PlusCircle className="h-5 w-5" />
+          </Button>
+        </div>
         
-        <ScrollArea className="flex-1 w-full">
+        <ScrollArea className="flex-1">
           <div className="flex flex-col items-center gap-2 px-2">
             {chats.slice(0, 5).map(chat => (
               <Button
@@ -101,7 +103,7 @@ const ChatSidebar = ({ onNewChat, selectedChatId, onSelectChat, isCollapsed = fa
           </div>
         </ScrollArea>
         
-        <div className="border-t border-gray-200 pt-2 flex flex-col gap-1">
+        <div className="border-t border-gray-200 p-2 flex flex-col gap-1">
           <Button 
             variant="ghost" 
             size="icon"
@@ -141,7 +143,7 @@ const ChatSidebar = ({ onNewChat, selectedChatId, onSelectChat, isCollapsed = fa
         </Button>
       </div>
       
-      <ScrollArea className="flex-1">
+      <ScrollArea className="flex-1 min-h-0">
         <div className="p-2">
           {isLoading ? (
             <div className="p-4 text-center text-gray-500">Loading chats...</div>
@@ -179,7 +181,7 @@ const ChatSidebar = ({ onNewChat, selectedChatId, onSelectChat, isCollapsed = fa
         </div>
       </ScrollArea>
       
-      <div className="border-t border-gray-200 p-2">
+      <div className="border-t border-gray-200 p-2 mt-auto">
         <Button 
           variant="ghost" 
           className="w-full justify-start text-gray-600 hover:text-gray-900 hover:bg-gray-100 mb-1"

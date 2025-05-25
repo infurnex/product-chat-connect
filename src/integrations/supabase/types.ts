@@ -99,6 +99,7 @@ export type Database = {
           ratings: number | null
           reviews: number | null
           seller: string
+          source: string
         }
         Insert: {
           category_id: string
@@ -110,6 +111,7 @@ export type Database = {
           ratings?: number | null
           reviews?: number | null
           seller: string
+          source: string
         }
         Update: {
           category_id?: string
@@ -121,6 +123,7 @@ export type Database = {
           ratings?: number | null
           reviews?: number | null
           seller?: string
+          source?: string
         }
         Relationships: [
           {
@@ -134,29 +137,50 @@ export type Database = {
       }
       user_preferences: {
         Row: {
+          age: number | null
+          brands: string | null
+          budget: string | null
+          categories: string | null
           country: string | null
           created_at: string
+          eco: string | null
           gender: string | null
           id: string
           language: string | null
+          name: string | null
+          shipping: string | null
           updated_at: string
           user_id: string
         }
         Insert: {
+          age?: number | null
+          brands?: string | null
+          budget?: string | null
+          categories?: string | null
           country?: string | null
           created_at?: string
+          eco?: string | null
           gender?: string | null
           id?: string
           language?: string | null
+          name?: string | null
+          shipping?: string | null
           updated_at?: string
           user_id: string
         }
         Update: {
+          age?: number | null
+          brands?: string | null
+          budget?: string | null
+          categories?: string | null
           country?: string | null
           created_at?: string
+          eco?: string | null
           gender?: string | null
           id?: string
           language?: string | null
+          name?: string | null
+          shipping?: string | null
           updated_at?: string
           user_id?: string
         }
