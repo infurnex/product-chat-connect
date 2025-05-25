@@ -133,6 +133,7 @@ const ChatSidebar = ({ onNewChat, selectedChatId, onSelectChat, isCollapsed = fa
 
   return (
     <div className="w-full h-full bg-gray-50 border-r border-gray-200 flex flex-col">
+      {/* Fixed Header */}
       <div className="p-4 flex justify-between items-center border-b border-gray-200 flex-shrink-0">
         <h2 className="font-semibold text-lg">Chat History</h2>
         <Button 
@@ -145,8 +146,9 @@ const ChatSidebar = ({ onNewChat, selectedChatId, onSelectChat, isCollapsed = fa
         </Button>
       </div>
       
-      <div className="flex-1 overflow-hidden">
-        <ScrollArea className="h-full">
+      {/* Scrollable Chat List */}
+      <div className="flex-1 overflow-hidden min-h-0">
+        <div className="h-full overflow-y-auto">
           <div className="p-2">
             {isLoading ? (
               <div className="p-4 text-center text-gray-500">Loading chats...</div>
@@ -182,13 +184,14 @@ const ChatSidebar = ({ onNewChat, selectedChatId, onSelectChat, isCollapsed = fa
               ))
             )}
           </div>
-        </ScrollArea>
+        </div>
       </div>
       
+      {/* Fixed Footer */}
       <div className="border-t border-gray-200 p-2 flex-shrink-0">
         <Button 
           variant="ghost" 
-          className="w-full justify-start text-gray-600 hover:text-gray-900 hover:bg-gray-100 mb-1"
+          className="w-full justify-start text-gray-600 hover:text-gray-900 hover:bg-gray-100"
           onClick={() => setShowSettings(true)}
         >
           <Settings className="mr-2 h-4 w-4" />
