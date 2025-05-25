@@ -40,6 +40,10 @@ An intelligent shopping assistant that helps users find the perfect products bas
 - Dialogs and prompts are designed to be lightweight and non-intrusive.
 - Product results are shown on the dashboard after user approval.
 
+### 🧩 AI Workflow in n8n
+Here’s how the workflow looks inside n8n:
+![AI Product Finder Workflow](./assets/n8n-workflow.png)
+
 ---
 
 ## 🌐 Live Website
