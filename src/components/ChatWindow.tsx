@@ -9,6 +9,7 @@ import { useCreateChat } from "@/hooks/useChats";
 import { Message } from "@/types/database";
 import { set } from "date-fns";
 import AiLoader from "./ui/aiLoader";
+import { supabase } from "@/integrations/supabase/client";
 
 interface ChatWindowProps {
   onClose: () => void;
@@ -47,6 +48,7 @@ const ChatWindow = ({ onClose, chatId, onChatCreated }: ChatWindowProps) => {
     
     // Add user message
     try {
+      const { data: { user } } = await supabase.auth.getUser();
 
       if (image) {
         await createMessageMutation.mutateAsync({
@@ -67,6 +69,7 @@ const ChatWindow = ({ onClose, chatId, onChatCreated }: ChatWindowProps) => {
       const formData = new FormData();
       formData.append("chatId", currentChatId);
       formData.append("text", message);
+      formData.append("userID", user?.id);
       if (image) {
         formData.append("image", image);
       }
