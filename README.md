@@ -1,73 +1,66 @@
-# Welcome to your Lovable project
+# 🛍️ AI Personal Shopping Assistant
 
-## Project info
+An intelligent shopping assistant that helps users find the perfect products based on their preferences, images, or descriptions. Designed for seamless integration into e-commerce platforms or product discovery dashboards.
 
-**URL**: https://lovable.dev/projects/2446fc87-1509-4760-a2af-20d4af286480
+## 🚀 Features
 
-## How can I edit this code?
+### 🔍 Smart Product Discovery
+- Find relevant products based on user-provided descriptions or images.
+- Automatically understands key attributes like product type, material, color, style, and more.
+- Intelligently follows up with questions to refine search results.
 
-There are several ways of editing your application.
+### 🧠 Personalized Recommendations
+- Supports preference-based suggestions (e.g., gender, age, budget, favorite brands).
+- Tailors product results based on saved user profiles.
 
-**Use Lovable**
+### 📷 Image Understanding
+- Accepts image descriptions and parses them to identify product details.
+- Great for users browsing catalog-like photos or screenshots from social media.
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/2446fc87-1509-4760-a2af-20d4af286480) and start prompting.
+### 🗣️ Conversational UI
+- Friendly, natural language interface for guiding users through the shopping experience.
+- Understands requests like:
+  - “Find similar jackets.”
+  - “I need something under $50.”
+  - “Show me available sneakers in my size.”
 
-Changes made via Lovable will be committed automatically to this repo.
+### 🌐 Live Product Catalog Integration
+- Displays product listings directly in your app’s dashboard.
+- Retrieves real-time data from external e-commerce sources (Amazon, Flipkart, etc.).
 
-**Use your preferred IDE**
+### 📦 Multi-Product Handling
+- Supports conversations around multiple products.
+- Confirms with the user before initiating searches to avoid ambiguity.
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### 📁 Preference Management
+- Users can save and manage preferences (gender, age, country, language, and more).
+- AI agent can auto-fetch and apply these preferences for better search accuracy.
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### 🧾 Minimal Interface Disruption
+- Dialogs and prompts are designed to be lightweight and non-intrusive.
+- Product results are shown on the dashboard after user approval.
 
-Follow these steps:
+---
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+## 🌐 Live Website
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+The app is live at: **[Take me there](https://product-chat-connect.lovable.app/)**  
+🔐 **Credentials**:  
+- Shared in pptx.
 
-# Step 3: Install the necessary dependencies.
-npm i
+---
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+## 🧪 Demo
+
+🎥 **Demo Video**: [Watch the demo](https://drive.google.com/file/d/1PjHb9vjLFZO0I8Is-Cvi2yh5-GKN8D0s/view?usp=drive_link)  
+_(Replace the link with the actual video URL)_
+
+---
+
+## 💻 Running Locally
+
+```bash
+git clone <repo-url>
+cd <project-folder>
+npm install
 npm run dev
-```
-
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/2446fc87-1509-4760-a2af-20d4af286480) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
