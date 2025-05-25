@@ -45,12 +45,12 @@ const ChatWindow = ({ onClose, chatId, onChatCreated }: ChatWindowProps) => {
     
     // Add user message
     try {
-      // If image is attached, create a message with image indicator
+      // If image is attached, create a message with image filename and emoji
       if (image) {
         await createMessageMutation.mutateAsync({
           chatId: currentChatId,
           role: 'user',
-          content: `📷 Image: ${image.name}`,
+          content: `${image.name}📷`,
         });
       }
       
@@ -173,7 +173,7 @@ const ChatWindow = ({ onClose, chatId, onChatCreated }: ChatWindowProps) => {
       {/* Image preview */}
       {image && (
         <div className="px-3 py-2 border-t border-gray-200 bg-gray-50">
-          <div className="flex items-center gap-2 p-2 bg-white rounded border">
+          <div className="flex items-center gap-2 p-2 bg-white rounded border border-green-200">
             <img 
               src={URL.createObjectURL(image)} 
               alt="Preview" 
@@ -183,7 +183,7 @@ const ChatWindow = ({ onClose, chatId, onChatCreated }: ChatWindowProps) => {
               <p className="text-sm text-gray-600 truncate">{image.name}</p>
               <div className="flex items-center gap-1 text-xs text-green-600">
                 <CheckCircle className="w-3 h-3" />
-                <span>Image attached</span>
+                <span>Ready to send</span>
               </div>
             </div>
             <Button 
@@ -210,7 +210,7 @@ const ChatWindow = ({ onClose, chatId, onChatCreated }: ChatWindowProps) => {
         <Button 
           variant="ghost" 
           size="icon" 
-          className={`h-8 w-8 ${image ? 'text-green-600' : 'text-gray-500'}`}
+          className={`h-8 w-8 ${image ? 'text-green-600 bg-green-50' : 'text-gray-500'}`}
           onClick={() => fileInputRef.current?.click()}
         > 
           <Paperclip className="h-4 w-4" />

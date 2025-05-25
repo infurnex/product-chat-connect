@@ -86,22 +86,24 @@ const ChatSidebar = ({ onNewChat, selectedChatId, onSelectChat, isCollapsed = fa
           </Button>
         </div>
         
-        <ScrollArea className="flex-1">
-          <div className="flex flex-col items-center gap-2 px-2">
-            {chats.slice(0, 5).map(chat => (
-              <Button
-                key={chat.id}
-                variant="ghost"
-                size="icon"
-                className={`w-8 h-8 ${selectedChatId === chat.id ? 'bg-gray-100' : ''}`}
-                onClick={() => onSelectChat(chat.id)}
-                title={chat.title}
-              >
-                <MessageSquare className="h-4 w-4" />
-              </Button>
-            ))}
-          </div>
-        </ScrollArea>
+        <div className="flex-1 overflow-hidden">
+          <ScrollArea className="h-full">
+            <div className="flex flex-col items-center gap-2 px-2">
+              {chats.slice(0, 5).map(chat => (
+                <Button
+                  key={chat.id}
+                  variant="ghost"
+                  size="icon"
+                  className={`w-8 h-8 ${selectedChatId === chat.id ? 'bg-gray-100' : ''}`}
+                  onClick={() => onSelectChat(chat.id)}
+                  title={chat.title}
+                >
+                  <MessageSquare className="h-4 w-4" />
+                </Button>
+              ))}
+            </div>
+          </ScrollArea>
+        </div>
         
         <div className="border-t border-gray-200 p-2 flex flex-col gap-1">
           <Button 
@@ -131,7 +133,7 @@ const ChatSidebar = ({ onNewChat, selectedChatId, onSelectChat, isCollapsed = fa
 
   return (
     <div className="w-full h-full bg-gray-50 border-r border-gray-200 flex flex-col">
-      <div className="p-4 flex justify-between items-center border-b border-gray-200">
+      <div className="p-4 flex justify-between items-center border-b border-gray-200 flex-shrink-0">
         <h2 className="font-semibold text-lg">Chat History</h2>
         <Button 
           variant="ghost" 
@@ -143,45 +145,47 @@ const ChatSidebar = ({ onNewChat, selectedChatId, onSelectChat, isCollapsed = fa
         </Button>
       </div>
       
-      <ScrollArea className="flex-1 min-h-0">
-        <div className="p-2">
-          {isLoading ? (
-            <div className="p-4 text-center text-gray-500">Loading chats...</div>
-          ) : chats.length === 0 ? (
-            <div className="p-4 text-center text-gray-500">No chats yet</div>
-          ) : (
-            chats.map(chat => (
-              <div 
-                key={chat.id}
-                className={`flex items-start gap-3 p-3 hover:bg-gray-100 rounded-lg cursor-pointer transition-colors mb-1 group ${
-                  selectedChatId === chat.id ? 'bg-gray-100' : ''
-                }`}
-                onClick={() => onSelectChat(chat.id)}
-              >
-                <MessageSquare className="h-5 w-5 mt-1 text-gray-500 shrink-0" />
-                <div className="flex-1 min-w-0">
-                  <div className="flex justify-between items-baseline">
-                    <h3 className="font-medium text-sm truncate pr-2">{chat.title}</h3>
-                    <div className="flex items-center gap-1">
-                      <span className="text-xs text-gray-500">{formatDate(chat.created_at)}</span>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
-                        onClick={(e) => handleEditChat(e, chat)}
-                      >
-                        <Pencil className="h-3 w-3" />
-                      </Button>
+      <div className="flex-1 overflow-hidden">
+        <ScrollArea className="h-full">
+          <div className="p-2">
+            {isLoading ? (
+              <div className="p-4 text-center text-gray-500">Loading chats...</div>
+            ) : chats.length === 0 ? (
+              <div className="p-4 text-center text-gray-500">No chats yet</div>
+            ) : (
+              chats.map(chat => (
+                <div 
+                  key={chat.id}
+                  className={`flex items-start gap-3 p-3 hover:bg-gray-100 rounded-lg cursor-pointer transition-colors mb-1 group ${
+                    selectedChatId === chat.id ? 'bg-gray-100' : ''
+                  }`}
+                  onClick={() => onSelectChat(chat.id)}
+                >
+                  <MessageSquare className="h-5 w-5 mt-1 text-gray-500 shrink-0" />
+                  <div className="flex-1 min-w-0">
+                    <div className="flex justify-between items-baseline">
+                      <h3 className="font-medium text-sm truncate pr-2">{chat.title}</h3>
+                      <div className="flex items-center gap-1">
+                        <span className="text-xs text-gray-500">{formatDate(chat.created_at)}</span>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
+                          onClick={(e) => handleEditChat(e, chat)}
+                        >
+                          <Pencil className="h-3 w-3" />
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))
-          )}
-        </div>
-      </ScrollArea>
+              ))
+            )}
+          </div>
+        </ScrollArea>
+      </div>
       
-      <div className="border-t border-gray-200 p-2 mt-auto">
+      <div className="border-t border-gray-200 p-2 flex-shrink-0">
         <Button 
           variant="ghost" 
           className="w-full justify-start text-gray-600 hover:text-gray-900 hover:bg-gray-100 mb-1"
