@@ -44,15 +44,15 @@ An intelligent shopping assistant that helps users find the perfect products bas
 
 ## 🌐 Live Website
 
-The app is live at: **[xx](xx)**  
+The app is live at: **[xx](https://product-chat-connect.lovable.app/)**  
 🔐 **Credentials**:  
-- Username: `Sss`
+- Shared in pptx.
 
 ---
 
 ## 🧪 Demo
 
-🎥 **Demo Video**: [Watch the demo](#)  
+🎥 **Demo Video**: [Watch the demo](https://drive.google.com/file/d/1PjHb9vjLFZO0I8Is-Cvi2yh5-GKN8D0s/view?usp=drive_link)  
 _(Replace the link with the actual video URL)_
 
 ---
